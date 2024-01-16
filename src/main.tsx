@@ -7,6 +7,8 @@ import { BrowserRouter } from 'react-router-dom';
 import { store } from './store/index.ts';
 import { Provider } from 'react-redux';
 import './firebaseConfig.ts'
+import '@mantine/core/styles.css';
+
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <MantineProvider>

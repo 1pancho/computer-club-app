@@ -1,19 +1,23 @@
-import './App.css'
-import '@mantine/core/styles.css';
-import { Routes, Route } from 'react-router-dom';
+import React, { FC } from 'react';
+import { Route, Routes } from 'react-router-dom';
+import './App.css';
 import HomePage from './pages/HomePage';
-import LoginPage from './pages/LoginPage';
-import { FC } from 'react';
+import LoginPage from './pages/LoginPage/LoginPage';
+
+export enum RoutesPaths {
+  Home = '/',
+  LoginPage = '/LoginPage',
+}
 
 
-const App = () => {
+const App: FC = () => {
 
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} end></Route>
-      <Route path='/LoginPage' element={<LoginPage />}></Route>
+      <Route path={RoutesPaths.Home} element={<HomePage />} />
+      <Route path={RoutesPaths.LoginPage} element={<LoginPage />} />
     </Routes>
   )
 }
 
-export default App
+export default App;
