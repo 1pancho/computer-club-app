@@ -1,31 +1,24 @@
-import React, { FC, useEffect } from 'react';
 import { Button, Stack } from '@mantine/core';
-import { removeUser } from '../store/slices/userSlice';
-import { useAuth } from '../hooks/use-auth';
+import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../hooks/redux-hooks';
 import { RoutesPaths } from '../App';
+import { useAppDispatch } from '../hooks/redux-hooks';
+import { logout } from '../store/slices/userSlice';
 
 
 const HomePage: FC = () => {
   const dispatch = useAppDispatch();
-  const { isAuth } = useAuth();
   const navigate = useNavigate();
   
 
-  const handleGoogle = () => {
-    dispatch(removeUser());
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate(RoutesPaths.LoginPage)
   };
-
-  useEffect(() => {
-    if (!isAuth) {
-      navigate(RoutesPaths.LoginPage);
-    }
-  }, [isAuth, navigate]);
 
   return (
     <Stack align="center">
-      <Button color="dark.4" onClick={handleGoogle}>
+      <Button color="dark.4" onClick={handleLogout}>
         Log out
       </Button>
     </Stack>

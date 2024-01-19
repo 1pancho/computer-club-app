@@ -1,4 +1,4 @@
-import { Button, Group, Space, Stack, Text } from '@mantine/core';
+import { Button, Group, Stack, Text } from '@mantine/core';
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import 'react-international-phone/style.css';

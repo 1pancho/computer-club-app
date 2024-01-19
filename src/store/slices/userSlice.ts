@@ -1,17 +1,16 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { User, signInWithPopup } from "firebase/auth";
-import { auth, githubProvider, googleProvider } from "../../firebaseConfig";
-import { AppDispatch, RootState } from "..";
-import { Notification, rem } from '@mantine/core';
-import { IconCheck } from '@tabler/icons-react';
-
-
+import { auth, db, githubProvider, googleProvider } from "../../firebaseConfig";
+// import { AppDispatch, RootState } from "..";
+import { collection, doc, getDoc, setDoc } from "firebase/firestore";
+import { toast } from 'react-toastify';
+import { AppDispatch, RootState } from "store";
 
 
 interface IThunkApi {
     state: RootState;
-    dispatch?: AppDispatch;
-    rejectWithValue: string;
+    dispatch?: AppDispatch; 
+    rejectWithValue: string; 
 }
 
 interface IInitialState {
@@ -32,18 +31,35 @@ const initialState: IInitialState = {
 
 
 
-const setUserByEmail = createAsyncThunk<User | undefined, unknown, any>('setUserByEmail', async (thunkApi) => {
+
+
+const setUserByEmail = createAsyncThunk<User | undefined, unknown, any>('setUserByEmail', async (_, thunkApi) => {
     try {
         const { user } = await signInWithPopup(auth, googleProvider);
-        return user;
+        const userDocRef = doc(collection(db, 'users'), user.uid);
+
+        // Проверяем, существует ли пользователь с заданным user.uid
+        const docSnapshot = await getDoc(userDocRef);
+        
+        if (docSnapshot.exists()) {
+            // Пользователь уже существует в базе данных
+            return user;
+        } else {
+          await setDoc(userDocRef, {
+            email: user.email,
+            displayName: user.displayName,
+          });
+          
+          return user;
+        }
       } catch (error) {
-        console.error('Google authentication error:', error);
+         toast.error('Something went wrong');
       }
 })
 
 
 
-const setUserByGithub = createAsyncThunk<User | undefined, unknown, any>('setUserByGithub', async (thunkApi) => {
+const setUserByGithub = createAsyncThunk<User | undefined, unknown, any>('setUserByGithub', async (_, thunkApi) => {
     try {
         const { user } = await signInWithPopup(auth, githubProvider);
         return user;
@@ -56,7 +72,7 @@ const userSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        removeUser(state) {
+        logout(state) {
             state.email = null;
             state.github = null;
             state.token = null;
@@ -72,10 +88,15 @@ const userSlice = createSlice({
             state.id = payload?.uid || '';
             state.isLoading = false;
             console.log(payload)
+            toast("Successful!")
         })
         builder.addCase(setUserByEmail.rejected, (state) => {
             state.isLoading = false;
+            toast.error('Something went wrong');
         })
+
+
+
         builder.addCase(setUserByGithub.pending, (state) => {
             state.isLoading = true
         })
@@ -84,21 +105,12 @@ const userSlice = createSlice({
             state.id = payload?.uid || '';
             state.isLoading = false;
             console.log(payload)
-            Notification({
-                icon: payload,
-                color: "teal",
-                title: "All good!",
-                mt: "md",
-            });
+            toast.success('Successful');
+
         })
     }
 })
 
-export const { removeUser } = userSlice.actions;
+export const { logout } = userSlice.actions;
 export default userSlice.reducer;
 export const authThunk = {setUserByEmail, setUserByGithub}
-
-
-//Переделать под thunk
-//rejectWithValue
-//react-toastify

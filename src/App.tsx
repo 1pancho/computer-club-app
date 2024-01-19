@@ -1,5 +1,5 @@
-import React, { FC } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { FC } from 'react';
+import { Route, Routes } from 'react-router';
 import './App.css';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage/LoginPage';
@@ -13,7 +13,7 @@ export enum RoutesPaths {
 const App: FC = () => {
 
   return (
-    <Routes>
+     <Routes>
       <Route path={RoutesPaths.Home} element={<HomePage />} />
       <Route path={RoutesPaths.LoginPage} element={<LoginPage />} />
     </Routes>
@@ -21,3 +21,12 @@ const App: FC = () => {
 }
 
 export default App;
+
+
+
+
+
+    // <Routes>
+    //   <Route path={RoutesPaths.Home} element={<HomePage />} />
+    //   <Route path={RoutesPaths.LoginPage} element={<LoginPage />} />
+    // </Routes>

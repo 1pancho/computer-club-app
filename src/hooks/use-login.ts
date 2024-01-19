@@ -1,37 +1,26 @@
-import { signInWithPopup } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { auth, githubProvider } from "../firebaseConfig";
+import { RoutesPaths } from "../App";
 import { authThunk } from "../store/slices/userSlice";
 import { useAppDispatch } from "./redux-hooks";
 
 interface IUseLogin {
   handleGoogle: () => void;
-  handleGithub: () => Promise<void>;
+  handleGithub: () => void;
 }
 
 export const useLogin = (): IUseLogin => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const handleGoogle = () => {
-    dispatch(authThunk.setUserByEmail())
-
-    //Если юзер в бд уже был, то возвращаем на на HomePage
-    //Если нет, то кидаем на NickName
-    
-    // useEffect(() => {
-    //   if (!isAuth) {
-    //     navigate(RoutesPaths.LoginPage);
-    //   }
-    // }, [isAuth, navigate]);
-    navigate('/')
+  const handleGoogle = async () => {
+    await dispatch(authThunk.setUserByEmail({}))
+    navigate(RoutesPaths.Home)
   }
 
-  const handleGithub = () => {
-    dispatch(authThunk.setUserByGithub())
-    navigate('/')
+  const handleGithub = async () => {
+    await dispatch(authThunk.setUserByGithub({}))
+    navigate(RoutesPaths.Home)
   }
-
 
   return {
     handleGoogle,

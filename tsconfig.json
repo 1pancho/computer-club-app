@@ -22,7 +22,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "copmposite": true,
+    "composite": true,
     "types": ["node", "vite/client"]
   },
   "include": ["src", "vite-env.d"],
